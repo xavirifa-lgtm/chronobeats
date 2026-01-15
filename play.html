@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>CHRONOBEATS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+    <style>
+        :root { --neon: #00f2ff; --bg: #0d0d0d; --accent: #ff0055; }
+        body { 
+            background: var(--bg); color: #fff; font-family: 'Bungee', cursive; 
+            margin: 0; height: 100vh; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; overflow: hidden;
+        }
+        .logo { font-size: 2.5em; color: var(--neon); text-shadow: 0 0 20px var(--neon); margin-bottom: 30px; letter-spacing: 2px; }
+        
+        #main-btn {
+            background: transparent; border: 5px solid #333;
+            width: 190px; height: 190px; border-radius: 50%;
+            color: #333; font-size: 1.4em; font-family: 'Bungee';
+            cursor: pointer; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        #main-btn.ready { border-color: var(--neon); color: var(--neon); box-shadow: 0 0 30px var(--neon); }
+        #main-btn.playing { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 40px var(--accent); transform: scale(1.1); }
+
+        #scan-btn {
+            margin-top: 50px; background: #1a1a1a; border: 1px solid #444; padding: 15px 30px;
+            color: #00f2ff; border-radius: 50px; font-family: 'Bungee'; font-size: 0.8em;
+            cursor: pointer; letter-spacing: 1px;
+        }
+
+        #scanner-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); z-index: 9999; flex-direction: column; align-items: center; justify-content: center;
+        }
+        #reader { width: 85%; max-width: 400px; border: 3px solid var(--neon); border-radius: 20px; overflow: hidden; box-shadow: 0 0 50px rgba(0,242,255,0.3); }
+
+        #confirm-box { display: none; text-align: center; padding: 20px; animation: fadeIn 0.5s; }
+        #btn-go {
+            background: var(--neon); color: #000; border: none; padding: 20px 45px;
+            border-radius: 50px; font-family: 'Bungee'; font-size: 1.3em; cursor: pointer;
+            box-shadow: 0 0 30px var(--neon);
+        }
+
+        #close-btn { background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 10px 20px; border-radius: 30px; margin-top: 30px; cursor: pointer; font-family: 'Bungee'; }
+        #video-container { position: absolute; top: -999px; visibility: hidden; }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div class="logo">CHRONOBEATS</div>
+    <button id="main-btn" onclick="controlarMusica()">VACÍO</button>
+    <button id="scan-btn" onclick="abrirEscaner()">🔍 SCAN TRACK</button>
+    
+    <div id="scanner-overlay">
+        <div id="camera-view" style="width: 100%; text-align: center;">
+            <h2 style="color: var(--neon); margin-bottom: 20px;">ENFOCA EL QR</h2>
+            <div id="reader"></div>
+        </div>
+        <div id="confirm-box">
+            <h2 style="color: var(--neon); margin-bottom: 30px;">BEAT DETECTADO</h2>
+            <button id="btn-go" onclick="redirigir()">CARGAR AHORA</button>
+        </div>
+        <button id="close-btn" onclick="cerrarEscaner()">CANCELAR</button>
+    </div>
+
+    <div id="video-container"></div>
+
+    <script>
+        var params = new URLSearchParams(window.location.search);
+        var v = params.get('v');
+        var reproduciendo = false;
+        var html5QrCode = null;
+        var idFinal = "";
+
+        window.onload = function() {
+            var btn = document.getElementById('main-btn');
+            if (v) { btn.innerText = "PLAY"; btn.classList.add('ready'); }
+        }
+
+        function controlarMusica() {
+            if (!v) return;
+            var container = document.getElementById('video-container');
+            var btn = document.getElementById('main-btn');
+
+            if (!reproduciendo) {
+                container.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/'+v+'?autoplay=1" allow="autoplay"></iframe>';
+                btn.innerText = "STOP";
+                btn.classList.add('playing');
+                reproduciendo = true;
+            } else {
+                window.location.href = window.location.origin + window.location.pathname;
+            }
+        }
+
+        function abrirEscaner() {
+            document.getElementById('scanner-overlay').style.display = 'flex';
+            document.getElementById('camera-view').style.display = 'block';
+            document.getElementById('confirm-box').style.display = 'none';
+            if (html5QrCode) { html5QrCode.clear(); }
+            html5QrCode = new Html5Qrcode("reader");
+            html5QrCode.start({ facingMode: "environment" }, { fps: 20, qrbox: 250 },
+                function(textoLeido) {
+                    var match = textoLeido.match(/[?&]v=([^&#]+)|youtu\.be\/([^?&#]+)/);
+                    idFinal = match ? (match[1] || match[2]) : textoLeido.trim();
+                    if (idFinal.length > 11) {
+                        var limpia = textoLeido.match(/[a-zA-Z0-9_-]{11}/);
+                        if (limpia) idFinal = limpia[0];
+                    }
+                    document.getElementById('camera-view').style.display = 'none';
+                    document.getElementById('confirm-box').style.display = 'block';
+                    html5QrCode.stop().catch(function(){});
+                }
+            ).catch(function(err) { alert("Permite el acceso a la cámara"); cerrarEscaner(); });
+        }
+
+        function redirigir() { if (idFinal) { window.location.href = window.location.origin + window.location.pathname + "?v=" + idFinal; } }
+        function cerrarEscaner() { if (html5QrCode) { html5QrCode.stop().finally(function() { document.getElementById('scanner-overlay').style.display = 'none'; }); } else { document.getElementById('scanner-overlay').style.display = 'none'; } }
+    </script>
+</body>
+</html>
