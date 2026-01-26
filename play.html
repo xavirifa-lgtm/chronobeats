@@ -24,8 +24,22 @@
         #main-btn.ready { border-color: var(--neon); color: var(--neon); box-shadow: 0 0 30px var(--neon); }
         #main-btn.playing { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 40px var(--accent); transform: scale(1.1); }
 
+        /* Contenedor de controles actualizado para dos filas */
+        #skip-controls { 
+            display: none; margin-top: 25px; flex-direction: column; gap: 10px; align-items: center; animation: fadeIn 0.5s;
+        }
+        .control-row { display: flex; gap: 10px; }
+
+        .skip-btn {
+            background: #1a1a1a; border: 1px solid var(--neon); color: var(--neon);
+            padding: 10px 15px; border-radius: 10px; font-family: 'Bungee';
+            font-size: 0.7em; cursor: pointer; min-width: 60px;
+        }
+        /* Color fucsia para los botones de retroceso */
+        .back-btn { border-color: var(--accent); color: var(--accent); }
+
         #scan-btn {
-            margin-top: 50px; background: #1a1a1a; border: 1px solid #444; padding: 15px 30px;
+            margin-top: 40px; background: #1a1a1a; border: 1px solid #444; padding: 15px 30px;
             color: #00f2ff; border-radius: 50px; font-family: 'Bungee'; font-size: 0.8em;
             cursor: pointer; letter-spacing: 1px;
         }
@@ -46,13 +60,27 @@
         #close-btn { background: transparent; color: var(--accent); border: 1px solid var(--accent); padding: 10px 20px; border-radius: 30px; margin-top: 30px; cursor: pointer; font-family: 'Bungee'; }
         #video-container { position: absolute; top: -999px; visibility: hidden; }
         
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="logo">CHRONOBEATS</div>
     <button id="main-btn" onclick="controlarMusica()">VACÍO</button>
+
+    <div id="skip-controls">
+        <div class="control-row">
+            <button class="skip-btn" onclick="saltar(5)">+5s</button>
+            <button class="skip-btn" onclick="saltar(10)">+10s</button>
+            <button class="skip-btn" onclick="saltar(20)">+20s</button>
+        </div>
+        <div class="control-row">
+            <button class="skip-btn back-btn" onclick="saltar(-5)">-5s</button>
+            <button class="skip-btn back-btn" onclick="saltar(-10)">-10s</button>
+            <button class="skip-btn back-btn" onclick="saltar(-20)">-20s</button>
+        </div>
+    </div>
+
     <button id="scan-btn" onclick="abrirEscaner()">🔍 SCAN TRACK</button>
     
     <div id="scanner-overlay">
@@ -76,24 +104,54 @@
         var html5QrCode = null;
         var idFinal = "";
 
+        var segundosAcumulados = 0;
+        var momentoDeInicio = 0;
+
         window.onload = function() {
             var btn = document.getElementById('main-btn');
             if (v) { btn.innerText = "PLAY"; btn.classList.add('ready'); }
         }
 
+        function cargarIframe(segundoInicio) {
+            // Evitamos que el segundo de inicio sea negativo
+            if (segundoInicio < 0) segundoInicio = 0;
+            
+            var container = document.getElementById('video-container');
+            container.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/'+v+'?autoplay=1&start='+segundoInicio+'" allow="autoplay"></iframe>';
+        }
+
         function controlarMusica() {
             if (!v) return;
-            var container = document.getElementById('video-container');
             var btn = document.getElementById('main-btn');
+            var skipBox = document.getElementById('skip-controls');
 
             if (!reproduciendo) {
-                container.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/'+v+'?autoplay=1" allow="autoplay"></iframe>';
+                segundosAcumulados = 0;
+                momentoDeInicio = Date.now();
+                cargarIframe(0);
+                
                 btn.innerText = "STOP";
                 btn.classList.add('playing');
+                skipBox.style.display = 'flex';
                 reproduciendo = true;
             } else {
                 window.location.href = window.location.origin + window.location.pathname;
             }
+        }
+
+        function saltar(segundosExtra) {
+            if (!reproduciendo) return;
+
+            var tiempoTranscurridoReal = Math.floor((Date.now() - momentoDeInicio) / 1000);
+            
+            // Sumamos (o restamos si es negativo) el tiempo al acumulado
+            segundosAcumulados += tiempoTranscurridoReal + segundosExtra;
+            
+            // Seguridad: no bajar de 0
+            if (segundosAcumulados < 0) segundosAcumulados = 0;
+
+            momentoDeInicio = Date.now();
+            cargarIframe(segundosAcumulados);
         }
 
         function abrirEscaner() {
