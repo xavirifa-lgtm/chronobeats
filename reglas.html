@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>REGLAS - CHRONOBEATS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+    <style>
+        :root { --neon: #00f2ff; --bg: #0d0d0d; --accent: #ff0055; --gray: #888; }
+        body { 
+            background: var(--bg); color: #fff; font-family: 'Bungee', cursive; 
+            margin: 0; min-height: 100vh; display: flex; flex-direction: column; 
+            align-items: center; padding: 20px; box-sizing: border-box; overflow-x: hidden;
+        }
+        .logo { font-size: 2em; color: var(--neon); text-shadow: 0 0 20px var(--neon); margin-bottom: 20px; }
+        
+        .rules-container {
+            max-width: 600px; background: rgba(255, 255, 255, 0.05);
+            padding: 20px; border-radius: 20px; border: 1px solid #333;
+            line-height: 1.4; margin-bottom: 30px;
+        }
+
+        section { margin-bottom: 25px; border-bottom: 1px solid #222; padding-bottom: 15px; }
+        h2 { color: var(--accent); font-size: 1.1em; margin-top: 0; text-transform: uppercase; }
+        p, li { font-size: 0.8em; color: #ccc; margin-bottom: 10px; }
+        strong { color: var(--neon); }
+
+        .token-box { border: 1px dashed var(--neon); padding: 10px; border-radius: 10px; background: rgba(0, 242, 255, 0.05); }
+
+        .back-btn {
+            background: #1a1a1a; border: 2px solid var(--neon); padding: 15px 30px;
+            color: var(--neon); border-radius: 50px; font-family: 'Bungee'; font-size: 0.9em;
+            cursor: pointer; text-decoration: none; transition: 0.3s;
+            box-shadow: 0 0 15px rgba(0, 242, 255, 0.2); margin-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="logo">REGLAMENTO</div>
+
+    <div class="rules-container">
+        
+        <section>
+            <h2>🎯 Objetivo</h2>
+            <p>Sé el primero en conseguir <strong>10 cartas</strong> ordenadas cronológicamente en tu línea del tiempo.</p>
+        </section>
+
+        <section>
+            <h2>🎹 Turno de Juego</h2>
+            <ul>
+                <li>1. Empiezas con una carta boca arriba y <strong>2 fichas</strong>.</li>
+                <li>2. Escanea una nueva carta y dale al <strong>PLAY</strong>.</li>
+                <li>3. Colócala antes o después de tus cartas actuales según el año que creas que es.</li>
+                <li>4. <strong>Bonus:</strong> Si además de colocarla bien, aciertas <strong>Artista y Canción</strong>, ganas una ficha.</li>
+                <li><em>*Si fallas el año pero aciertas Artista/Canción, ganas la ficha pero descartas la carta.</em></li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>💎 Uso de Fichas</h2>
+            <div class="token-box">
+                <p>• <strong>1 Ficha:</strong> Descartar canción actual y pasar a la siguiente.</p>
+                <p>• <strong>3 Fichas:</strong> Colocar la carta directamente sin escucharla (auto-acierto).</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>⚔️ El Desafío (Apuestas)</h2>
+            <p>Si crees que un rival se va a equivocar, puedes <strong>apostar 1 ficha</strong>:</p>
+            <ul>
+                <li>Si tú tenías razón sobre el lugar correcto, <strong>te llevas su carta</strong>.</li>
+                <li>Si el jugador original acierta (o el año es el mismo que el de la carta límite), él se queda la carta y tú pierdes la ficha.</li>
+            </ul>
+        </section>
+
+    </div>
+
+    <a href="index.html" class="back-btn">VOLVER AL JUEGO</a>
+
+</body>
+</html>
