@@ -11,7 +11,7 @@
             background: var(--bg); color: #fff; font-family: 'Bungee', cursive; 
             margin: 0; min-height: 100vh; display: flex; flex-direction: column; 
             align-items: center; padding: 20px; box-sizing: border-box;
-            overflow-y: auto; /* Permite scroll para leer las reglas */
+            overflow-y: auto;
         }
         .logo { font-size: 2em; color: var(--neon); text-shadow: 0 0 20px var(--neon); margin-bottom: 20px; text-align: center; }
         
@@ -27,6 +27,8 @@
         strong { color: var(--neon); }
 
         .token-box { border: 1px dashed var(--neon); padding: 15px; border-radius: 10px; background: rgba(0, 242, 255, 0.05); margin-top: 10px; }
+        .limit-warning { color: var(--accent); font-size: 0.9em; text-align: center; margin-top: 10px; border: 1px solid var(--accent); padding: 5px; border-radius: 5px; }
+        .special-rule { border-left: 3px solid #fff; padding-left: 10px; margin-top: 10px; font-style: italic; }
 
         .back-btn {
             background: #1a1a1a; border: 2px solid var(--neon); padding: 15px 30px;
@@ -46,17 +48,19 @@
         
         <section>
             <h2>🎯 Preparación</h2>
-            <p>• Cada jugador recibe <strong>una carta boca arriba</strong> como año de inicio.</p>
-            <p>• Cada jugador comienza con <strong>2 fichas</strong>.</p>
-            <p>• Objetivo: Ser el primero en tener <strong>10 cartas</strong> ordenadas cronológicamente.</p>
+            <p>• Cada jugador recibe <strong>una carta boca arriba</strong>.</p>
+            <p>• Se empieza con <strong>2 fichas</strong>.</p>
+            <p>• Objetivo: <strong>10 cartas</strong> ordenadas cronológicamente.</p>
+            <div class="limit-warning">⚠️ MÁXIMO 5 FICHAS POR JUGADOR</div>
         </section>
 
         <section>
             <h2>🎹 Turno de Juego</h2>
             <ul>
                 <li>1. Escanea una carta y dale a <strong>PLAY</strong>.</li>
-                <li>2. Colócala en tu línea del tiempo (antes o después de tus cartas).</li>
-                <li>3. <strong>Fichas Bonus:</strong> Si además de colocarla bien, aciertas <strong>Artista y Canción</strong>, ganas una ficha.</li>
+                <li>2. Colócala en tu línea del tiempo.</li>
+                <li>3. <strong>Bonus:</strong> Si aciertas <strong>Artista y Canción</strong>, ganas 1 ficha.</li>
+                <li class="special-rule">⭐ <strong>Siglo de Oro:</strong> Si aciertas una canción anterior a 1960 o posterior a 2020 (Artista + Canción), ganas <strong>2 fichas</strong>.</li>
                 <li><em>*Si fallas el año pero aciertas Artista/Canción, ganas la ficha pero pierdes la carta.</em></li>
             </ul>
         </section>
@@ -64,18 +68,27 @@
         <section>
             <h2>💎 Las Fichas</h2>
             <div class="token-box">
-                <p>• <strong>1 Ficha:</strong> Descartar canción actual y escuchar la siguiente.</p>
-                <p>• <strong>3 Fichas:</strong> Colocar la carta directamente en tu línea (sin escucharla).</p>
+                <p>• <strong>1 Ficha:</strong> Descartar canción y pasar a la siguiente.</p>
+                <p>• <strong>3 Fichas:</strong> Colocar la carta directamente (Auto-acierto).</p>
+                <p>• <strong>5 Fichas (GLITCH):</strong> Obliga a un oponente a descartar su última carta acertada.</p>
             </div>
+            <div class="special-rule">🔥 <strong>Efecto Eco:</strong> Si encadenas 3 aciertos seguidos (Año + Artista + Canción) sin usar fichas, robas una ficha a un oponente.</div>
         </section>
 
         <section>
             <h2>⚔️ Desafío (Apostar)</h2>
-            <p>Si crees que un rival se equivoca, puedes <strong>apostar 1 ficha</strong>:</p>
+            <p>Puedes apostar 1 ficha si crees que un rival fallará:</p>
             <ul>
-                <li>• Si tenías razón: <strong>Robas la carta</strong> para tu línea del tiempo.</li>
-                <li>• Si el jugador acierta (o es el <strong>mismo año</strong> que el límite): Él se queda la carta y tú pierdes tu ficha.</li>
+                <li>• La ficha apostada <strong>se pierde siempre</strong>.</li>
+                <li>• Si tenías razón: <strong>Robas la carta</strong> para tu línea.</li>
+                <li>• Si el jugador acierta (o es el <strong>mismo año</strong>): Él se queda la carta.</li>
             </ul>
+        </section>
+
+        <section>
+            <h2>🏆 El Gran Final</h2>
+            <p>Al llegar a la <strong>carta 10</strong>, debes superar el examen final:</p>
+            <p>Los rivales eligen una carta. Debes colocarla correctamente y decir el <strong>año exacto</strong> (margen de +/- 2 años). Si fallas, vuelves a tener 9 cartas.</p>
         </section>
 
     </div>
