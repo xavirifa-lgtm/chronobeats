@@ -24,7 +24,6 @@
         #main-btn.ready { border-color: var(--neon); color: var(--neon); box-shadow: 0 0 30px var(--neon); }
         #main-btn.playing { background: var(--accent); border-color: var(--accent); color: #fff; box-shadow: 0 0 40px var(--accent); transform: scale(1.1); }
 
-        /* Contenedor de controles actualizado para dos filas */
         #skip-controls { 
             display: none; margin-top: 25px; flex-direction: column; gap: 10px; align-items: center; animation: fadeIn 0.5s;
         }
@@ -35,7 +34,6 @@
             padding: 10px 15px; border-radius: 10px; font-family: 'Bungee';
             font-size: 0.7em; cursor: pointer; min-width: 60px;
         }
-        /* Color fucsia para los botones de retroceso */
         .back-btn { border-color: var(--accent); color: var(--accent); }
 
         #scan-btn {
@@ -43,6 +41,18 @@
             color: #00f2ff; border-radius: 50px; font-family: 'Bungee'; font-size: 0.8em;
             cursor: pointer; letter-spacing: 1px;
         }
+
+        /* --- NUEVO ESTILO PARA EL BOTÓN DE REGLAS --- */
+        #rules-link {
+            margin-top: 20px;
+            color: #555;
+            font-size: 0.7em;
+            text-decoration: underline;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        #rules-link:hover { color: var(--accent); }
+        /* -------------------------------------------- */
 
         #scanner-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -66,6 +76,7 @@
 <body>
 
     <div class="logo">CHRONOBEATS</div>
+    
     <button id="main-btn" onclick="controlarMusica()">VACÍO</button>
 
     <div id="skip-controls">
@@ -83,6 +94,8 @@
 
     <button id="scan-btn" onclick="abrirEscaner()">🔍 SCAN TRACK</button>
     
+    <a href="reglas.html" id="rules-link">REGLAS DEL JUEGO</a>
+
     <div id="scanner-overlay">
         <div id="camera-view" style="width: 100%; text-align: center;">
             <h2 style="color: var(--neon); margin-bottom: 20px;">ENFOCA EL QR</h2>
@@ -113,9 +126,7 @@
         }
 
         function cargarIframe(segundoInicio) {
-            // Evitamos que el segundo de inicio sea negativo
             if (segundoInicio < 0) segundoInicio = 0;
-            
             var container = document.getElementById('video-container');
             container.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/'+v+'?autoplay=1&start='+segundoInicio+'" allow="autoplay"></iframe>';
         }
@@ -129,7 +140,6 @@
                 segundosAcumulados = 0;
                 momentoDeInicio = Date.now();
                 cargarIframe(0);
-                
                 btn.innerText = "STOP";
                 btn.classList.add('playing');
                 skipBox.style.display = 'flex';
@@ -141,15 +151,9 @@
 
         function saltar(segundosExtra) {
             if (!reproduciendo) return;
-
             var tiempoTranscurridoReal = Math.floor((Date.now() - momentoDeInicio) / 1000);
-            
-            // Sumamos (o restamos si es negativo) el tiempo al acumulado
             segundosAcumulados += tiempoTranscurridoReal + segundosExtra;
-            
-            // Seguridad: no bajar de 0
             if (segundosAcumulados < 0) segundosAcumulados = 0;
-
             momentoDeInicio = Date.now();
             cargarIframe(segundosAcumulados);
         }
