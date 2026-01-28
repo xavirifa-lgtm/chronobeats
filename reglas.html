@@ -10,9 +10,10 @@
         body { 
             background: var(--bg); color: #fff; font-family: 'Bungee', cursive; 
             margin: 0; min-height: 100vh; display: flex; flex-direction: column; 
-            align-items: center; padding: 20px; box-sizing: border-box; overflow-x: hidden;
+            align-items: center; padding: 20px; box-sizing: border-box;
+            overflow-y: auto; /* Permite scroll para leer las reglas */
         }
-        .logo { font-size: 2em; color: var(--neon); text-shadow: 0 0 20px var(--neon); margin-bottom: 20px; }
+        .logo { font-size: 2em; color: var(--neon); text-shadow: 0 0 20px var(--neon); margin-bottom: 20px; text-align: center; }
         
         .rules-container {
             max-width: 600px; background: rgba(255, 255, 255, 0.05);
@@ -21,18 +22,20 @@
         }
 
         section { margin-bottom: 25px; border-bottom: 1px solid #222; padding-bottom: 15px; }
-        h2 { color: var(--accent); font-size: 1.1em; margin-top: 0; text-transform: uppercase; }
-        p, li { font-size: 0.8em; color: #ccc; margin-bottom: 10px; }
+        h2 { color: var(--accent); font-size: 1.1em; margin-top: 0; text-transform: uppercase; border-left: 4px solid var(--accent); padding-left: 10px; }
+        p, li { font-size: 0.85em; color: #ccc; margin-bottom: 10px; list-style: none; padding: 0; }
         strong { color: var(--neon); }
 
-        .token-box { border: 1px dashed var(--neon); padding: 10px; border-radius: 10px; background: rgba(0, 242, 255, 0.05); }
+        .token-box { border: 1px dashed var(--neon); padding: 15px; border-radius: 10px; background: rgba(0, 242, 255, 0.05); margin-top: 10px; }
 
         .back-btn {
             background: #1a1a1a; border: 2px solid var(--neon); padding: 15px 30px;
             color: var(--neon); border-radius: 50px; font-family: 'Bungee'; font-size: 0.9em;
             cursor: pointer; text-decoration: none; transition: 0.3s;
             box-shadow: 0 0 15px rgba(0, 242, 255, 0.2); margin-bottom: 40px;
+            display: inline-block;
         }
+        .back-btn:hover { background: var(--neon); color: #000; box-shadow: 0 0 30px var(--neon); }
     </style>
 </head>
 <body>
@@ -42,41 +45,42 @@
     <div class="rules-container">
         
         <section>
-            <h2>🎯 Objetivo</h2>
-            <p>Sé el primero en conseguir <strong>10 cartas</strong> ordenadas cronológicamente en tu línea del tiempo.</p>
+            <h2>🎯 Preparación</h2>
+            <p>• Cada jugador recibe <strong>una carta boca arriba</strong> como año de inicio.</p>
+            <p>• Cada jugador comienza con <strong>2 fichas</strong>.</p>
+            <p>• Objetivo: Ser el primero en tener <strong>10 cartas</strong> ordenadas cronológicamente.</p>
         </section>
 
         <section>
             <h2>🎹 Turno de Juego</h2>
             <ul>
-                <li>1. Empiezas con una carta boca arriba y <strong>2 fichas</strong>.</li>
-                <li>2. Escanea una nueva carta y dale al <strong>PLAY</strong>.</li>
-                <li>3. Colócala antes o después de tus cartas actuales según el año que creas que es.</li>
-                <li>4. <strong>Bonus:</strong> Si además de colocarla bien, aciertas <strong>Artista y Canción</strong>, ganas una ficha.</li>
-                <li><em>*Si fallas el año pero aciertas Artista/Canción, ganas la ficha pero descartas la carta.</em></li>
+                <li>1. Escanea una carta y dale a <strong>PLAY</strong>.</li>
+                <li>2. Colócala en tu línea del tiempo (antes o después de tus cartas).</li>
+                <li>3. <strong>Fichas Bonus:</strong> Si además de colocarla bien, aciertas <strong>Artista y Canción</strong>, ganas una ficha.</li>
+                <li><em>*Si fallas el año pero aciertas Artista/Canción, ganas la ficha pero pierdes la carta.</em></li>
             </ul>
         </section>
 
         <section>
-            <h2>💎 Uso de Fichas</h2>
+            <h2>💎 Las Fichas</h2>
             <div class="token-box">
-                <p>• <strong>1 Ficha:</strong> Descartar canción actual y pasar a la siguiente.</p>
-                <p>• <strong>3 Fichas:</strong> Colocar la carta directamente sin escucharla (auto-acierto).</p>
+                <p>• <strong>1 Ficha:</strong> Descartar canción actual y escuchar la siguiente.</p>
+                <p>• <strong>3 Fichas:</strong> Colocar la carta directamente en tu línea (sin escucharla).</p>
             </div>
         </section>
 
         <section>
-            <h2>⚔️ El Desafío (Apuestas)</h2>
-            <p>Si crees que un rival se va a equivocar, puedes <strong>apostar 1 ficha</strong>:</p>
+            <h2>⚔️ Desafío (Apostar)</h2>
+            <p>Si crees que un rival se equivoca, puedes <strong>apostar 1 ficha</strong>:</p>
             <ul>
-                <li>Si tú tenías razón sobre el lugar correcto, <strong>te llevas su carta</strong>.</li>
-                <li>Si el jugador original acierta (o el año es el mismo que el de la carta límite), él se queda la carta y tú pierdes la ficha.</li>
+                <li>• Si tenías razón: <strong>Robas la carta</strong> para tu línea del tiempo.</li>
+                <li>• Si el jugador acierta (o es el <strong>mismo año</strong> que el límite): Él se queda la carta y tú pierdes tu ficha.</li>
             </ul>
         </section>
 
     </div>
 
-    <a href="index.html" class="back-btn">VOLVER AL JUEGO</a>
+    <a href="play.html" class="back-btn">VOLVER AL ESCÁNER</a>
 
 </body>
 </html>
