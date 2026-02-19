@@ -36,11 +36,12 @@
         }
         .back-btn { border-color: var(--accent); color: var(--accent); }
 
-        /* Estilo específico para el botón de pausa */
+        /* Botón de Pausa Forzado al Azul Neón */
         #pp-btn {
             width: 210px;
             margin-top: 5px;
-            border-width: 2px;
+            border: 2px solid var(--neon);
+            color: var(--neon);
             font-size: 0.8em;
         }
 
@@ -145,7 +146,6 @@
             var skipBox = document.getElementById('skip-controls');
 
             if (!reproduciendo && !estadoPausa) {
-                // Iniciar reproducción por primera vez
                 segundosAcumulados = 0;
                 momentoDeInicio = Date.now();
                 cargarIframe(0);
@@ -154,7 +154,6 @@
                 skipBox.style.display = 'flex';
                 reproduciendo = true;
             } else {
-                // Reset total (vuelve al estado inicial sin parámetros)
                 window.location.href = window.location.origin + window.location.pathname;
             }
         }
@@ -164,22 +163,20 @@
             if (!v) return;
 
             if (reproduciendo) {
-                // Acción: Pausar
                 var tiempoTranscurrido = Math.floor((Date.now() - momentoDeInicio) / 1000);
                 segundosAcumulados += tiempoTranscurrido;
-                document.getElementById('video-container').innerHTML = ''; // Detenemos el video
+                document.getElementById('video-container').innerHTML = '';
                 reproduciendo = false;
                 estadoPausa = true;
-                ppBtn.innerText = "RESUME ▶";
-                ppBtn.style.borderColor = "var(--neon)";
+                ppBtn.innerText = "RESUME"; // Eliminé el emoji para evitar el color naranja
+                ppBtn.style.color = "var(--neon)";
             } else if (estadoPausa) {
-                // Acción: Reanudar
                 momentoDeInicio = Date.now();
                 cargarIframe(segundosAcumulados);
                 reproduciendo = true;
                 estadoPausa = false;
-                ppBtn.innerText = "PAUSE ⏸";
-                ppBtn.style.borderColor = "var(--neon)";
+                ppBtn.innerText = "PAUSE"; // Eliminé el emoji para evitar el color naranja
+                ppBtn.style.color = "var(--neon)";
             }
         }
 
@@ -192,7 +189,6 @@
                 momentoDeInicio = Date.now();
                 cargarIframe(segundosAcumulados);
             } else {
-                // Si está pausado, solo ajustamos el contador para cuando vuelva
                 segundosAcumulados += segundosExtra;
                 if (segundosAcumulados < 0) segundosAcumulados = 0;
             }
