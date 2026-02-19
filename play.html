@@ -36,13 +36,20 @@
         }
         .back-btn { border-color: var(--accent); color: var(--accent); }
 
+        /* Estilo específico para el botón de pausa */
+        #pp-btn {
+            width: 210px;
+            margin-top: 5px;
+            border-width: 2px;
+            font-size: 0.8em;
+        }
+
         #scan-btn {
             margin-top: 40px; background: #1a1a1a; border: 1px solid #444; padding: 15px 30px;
             color: #00f2ff; border-radius: 50px; font-family: 'Bungee'; font-size: 0.8em;
             cursor: pointer; letter-spacing: 1px;
         }
 
-        /* Enlace de reglas */
         #rules-link {
             margin-top: 25px;
             color: #555;
@@ -88,6 +95,9 @@
             <button class="skip-btn back-btn" onclick="saltar(-10)">-10s</button>
             <button class="skip-btn back-btn" onclick="saltar(-20)">-20s</button>
         </div>
+        <div class="control-row">
+            <button id="pp-btn" class="skip-btn" onclick="togglePlayPause()">PAUSE / RESUME</button>
+        </div>
     </div>
 
     <button id="scan-btn" onclick="abrirEscaner()">🔍 SCAN TRACK</button>
@@ -109,10 +119,10 @@
     <div id="video-container"></div>
 
     <script>
-        // ... (Tu lógica de script se mantiene igual)
         var params = new URLSearchParams(window.location.search);
         var v = params.get('v');
         var reproduciendo = false;
+        var estadoPausa = false;
         var html5QrCode = null;
         var idFinal = "";
         var segundosAcumulados = 0;
@@ -133,7 +143,9 @@
             if (!v) return;
             var btn = document.getElementById('main-btn');
             var skipBox = document.getElementById('skip-controls');
-            if (!reproduciendo) {
+
+            if (!reproduciendo && !estadoPausa) {
+                // Iniciar reproducción por primera vez
                 segundosAcumulados = 0;
                 momentoDeInicio = Date.now();
                 cargarIframe(0);
@@ -142,17 +154,48 @@
                 skipBox.style.display = 'flex';
                 reproduciendo = true;
             } else {
+                // Reset total (vuelve al estado inicial sin parámetros)
                 window.location.href = window.location.origin + window.location.pathname;
             }
         }
 
+        function togglePlayPause() {
+            var ppBtn = document.getElementById('pp-btn');
+            if (!v) return;
+
+            if (reproduciendo) {
+                // Acción: Pausar
+                var tiempoTranscurrido = Math.floor((Date.now() - momentoDeInicio) / 1000);
+                segundosAcumulados += tiempoTranscurrido;
+                document.getElementById('video-container').innerHTML = ''; // Detenemos el video
+                reproduciendo = false;
+                estadoPausa = true;
+                ppBtn.innerText = "RESUME ▶";
+                ppBtn.style.borderColor = "var(--neon)";
+            } else if (estadoPausa) {
+                // Acción: Reanudar
+                momentoDeInicio = Date.now();
+                cargarIframe(segundosAcumulados);
+                reproduciendo = true;
+                estadoPausa = false;
+                ppBtn.innerText = "PAUSE ⏸";
+                ppBtn.style.borderColor = "var(--neon)";
+            }
+        }
+
         function saltar(segundosExtra) {
-            if (!reproduciendo) return;
-            var tiempoTranscurridoReal = Math.floor((Date.now() - momentoDeInicio) / 1000);
-            segundosAcumulados += tiempoTranscurridoReal + segundosExtra;
-            if (segundosAcumulados < 0) segundosAcumulados = 0;
-            momentoDeInicio = Date.now();
-            cargarIframe(segundosAcumulados);
+            if (!reproduciendo && !estadoPausa) return;
+            
+            if (reproduciendo) {
+                var tiempoTranscurridoReal = Math.floor((Date.now() - momentoDeInicio) / 1000);
+                segundosAcumulados += tiempoTranscurridoReal + segundosExtra;
+                momentoDeInicio = Date.now();
+                cargarIframe(segundosAcumulados);
+            } else {
+                // Si está pausado, solo ajustamos el contador para cuando vuelva
+                segundosAcumulados += segundosExtra;
+                if (segundosAcumulados < 0) segundosAcumulados = 0;
+            }
         }
 
         function abrirEscaner() {
